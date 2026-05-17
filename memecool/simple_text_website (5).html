@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meme-clicker.com</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 12px 20px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: bold;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* HERO */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at top, #1f2937, #0b1020);
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      opacity: 0.8;
+      max-width: 500px;
+    }
+
+    /* FEATURES */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 60px 20px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    /* GAME */
+    .game {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .click-btn {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: none;
+      background: #3b82f6;
+      font-size: 22px;
+      color: white;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .stats {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    .upgrade {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 14px;
+      display: inline-block;
+      min-width: 220px;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: #22c55e;
+      color: white;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">meme-clicker.com</div>
+  <button class="btn" onclick="document.getElementById('game').scrollIntoView({behavior:'smooth'})">Играть</button>
+</div>
+
+<div class="hero">
+  <h1>🚀 Meme Clicker Startup</h1>
+  <p>Самый простой и смешной кликер в интернете. Нажимай, прокачивайся и становись мем-магнатом.</p>
+  <button class="btn" onclick="document.getElementById('game').scrollIntoView({behavior:'smooth'})">Начать игру</button>
+</div>
+
+<div class="features">
+  <div class="card">😂 100+ мемов</div>
+  <div class="card">📱 Работает на телефоне</div>
+  <div class="card">⚡ Ускоренные клики</div>
+  <div class="card">⬆️ Апгрейды</div>
+</div>
+
+<div class="game" id="game">
+  <h2>Игра</h2>
+
+  <button class="click-btn" id="clickBtn">MEME</button>
+
+  <div class="stats">
+    Мемов: <span id="points">0</span><br>
+    За клик: <span id="power">1</span>
+  </div>
+
+  <div class="upgrade">
+    <div>Upgrade +1</div>
+    Цена: <span id="cost1">20</span>
+    <br>
+    <button id="buy1">Купить</button>
+  </div>
+
+  <div class="upgrade">
+    <div>Upgrade +2</div>
+    Цена: <span id="cost2">40</span>
+    <br>
+    <button id="buy2">Купить</button>
+  </div>
+</div>
+
+<script>
+let points = 0;
+let power = 1;
+let cost1 = 20;
+let cost2 = 40;
+let power2 = 0;
+
+const clickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+
+function update(){
+  document.getElementById('points').innerText = points;
+  document.getElementById('power').innerText = power + power2;
+  document.getElementById('cost1').innerText = cost1;
+  document.getElementById('cost2').innerText = cost2;
+}
+
+function click(){
+  clickSound.currentTime = 0;
+  clickSound.play();
+  points += power + power2;
+  update();
+}
+
+function buy1(){
+  if(points>=cost1){
+    points-=cost1;
+    power++;
+    cost1*=2;
+    update();
+  }
+}
+
+function buy2(){
+  if(points>=cost2){
+    points-=cost2;
+    power2+=2;
+    cost2+=40;
+    update();
+  }
+}
+
+document.getElementById('clickBtn').addEventListener('click', click);
+document.getElementById('buy1').addEventListener('click', buy1);
+document.getElementById('buy2').addEventListener('click', buy2);
+
+update();
+</script>
+
+</body>
+</html>
