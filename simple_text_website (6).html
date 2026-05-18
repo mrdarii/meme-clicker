@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>meme-clicker.com</title>
+
+  <style>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background: radial-gradient(circle at top, #050816, #000);
+      color:#00fff0;
+      overflow-x:hidden;
+      text-shadow:0 0 10px rgba(0,255,240,0.4);
+    }
+
+    .topbar{
+      position:fixed;
+      top:0;
+      width:100%;
+      padding:12px 20px;
+      background:rgba(5,8,22,0.75);
+      backdrop-filter:blur(12px);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:10;
+      box-shadow:0 0 25px rgba(0,255,240,0.25);
+    }
+
+    .stats{
+      display:flex;
+      gap:20px;
+      font-weight:bold;
+    }
+
+    .btn{
+      padding:10px 16px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(90deg,#00fff0,#7c4dff);
+      color:black;
+      font-weight:bold;
+      cursor:pointer;
+      box-shadow:0 0 15px rgba(0,255,240,0.4);
+    }
+
+    .hero{
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:48px;
+      text-shadow:0 0 20px #00fff0,0 0 40px #7c4dff;
+    }
+
+    .game{
+      padding:100px 20px;
+      text-align:center;
+    }
+
+    .click-btn{
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      border:2px solid #00fff0;
+      background:radial-gradient(circle,#0a0f2c,#000);
+      font-size:22px;
+      color:#00fff0;
+      cursor:pointer;
+      box-shadow:0 0 25px rgba(0,255,240,0.3);
+    }
+
+    .upgrade{
+      margin-top:15px;
+      padding:15px;
+      background:rgba(0,255,240,0.05);
+      border:1px solid rgba(0,255,240,0.2);
+      border-radius:14px;
+      display:inline-block;
+      min-width:240px;
+    }
+
+    button.up{
+      margin-top:8px;
+      padding:10px 14px;
+      border:none;
+      border-radius:10px;
+      background:linear-gradient(90deg,#7c4dff,#00fff0);
+      color:black;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .yellow{
+      color:yellow !important;
+      text-shadow:0 0 10px yellow;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><b>MEME CLICKER</b></div>
+  <div class="stats">
+    <div>Total Earned: <span id="total">0</span></div>
+    <div>Points: <span id="points">0</span></div>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>MEME CLICKER</h1>
+  <button class="btn" onclick="scrollGame()">START</button>
+</div>
+
+<div class="game" id="game">
+
+  <button class="click-btn" id="clickBtn">MEME</button>
+
+  <div style="margin-top:20px">
+    POWER: <span id="power">1</span><br>
+    AUTO: <span id="auto">OFF</span>
+  </div>
+
+  <div class="upgrade">
+    <b>+ CLICK 1</b><br>
+    COST: <span id="cost1">20</span><br>
+    <button class="up" id="buy1">BUY</button>
+  </div>
+
+  <div class="upgrade">
+    <b>+ CLICK 2</b><br>
+    COST: <span id="cost2">40</span><br>
+    <button class="up" id="buy2">BUY</button>
+  </div>
+
+  <div class="upgrade">
+    <b>+ CLICK 3 (AUTO)</b><br>
+    COST: <span id="cost3">100</span><br>
+    <button class="up" id="buy3">BUY</button>
+  </div>
+
+  <div class="upgrade">
+    <b>+ CLICK 4 (LEGEND)</b><br>
+    COST: <span id="cost4">100000</span><br>
+    <button class="up" id="buy4">BUY</button>
+  </div>
+
+</div>
+
+<script>
+let points=0;
+let total=0;
+let power=1;
+let cost1=20;
+let cost2=40;
+let cost3=100;
+let cost4=100000;
+let auto=false;
+
+function scrollGame(){
+  document.getElementById('game').scrollIntoView({behavior:'smooth'});
+}
+window.scrollGame=scrollGame;
+
+function update(){
+  document.getElementById('points').innerText=points;
+  document.getElementById('total').innerText=total;
+  document.getElementById('power').innerText=power;
+  document.getElementById('cost1').innerText=cost1;
+  document.getElementById('cost2').innerText=cost2;
+  document.getElementById('cost3').innerText=cost3;
+  document.getElementById('cost4').innerText=cost4;
+  document.getElementById('auto').innerText=auto?'ON':'OFF';
+
+  // yellow counter when 100k
+  const p=document.getElementById('points');
+  if(points>=100000){p.classList.add('yellow');}
+}
+
+function addPoints(val){
+  points+=val;
+  total+=val;
+}
+
+function click(){
+  addPoints(power);
+  update();
+}
+
+function buy1(){if(points>=cost1){points-=cost1;power+=1;cost1+=20;}update();}
+function buy2(){if(points>=cost2){points-=cost2;power+=2;cost2+=40;}update();}
+function buy3(){if(points>=cost3){points-=cost3;auto=true;cost3+=100;}update();}
+function buy4(){if(points>=cost4){points-=cost4;power+=10;cost4+=100000;}update();}
+
+setInterval(()=>{
+  if(auto){addPoints(power);update();}
+},100);
+
+window.onload=update;
+
+document.getElementById('clickBtn').onclick=click;
+document.getElementById('buy1').onclick=buy1;
+document.getElementById('buy2').onclick=buy2;
+document.getElementById('buy3').onclick=buy3;
+document.getElementById('buy4').onclick=buy4;
+</script>
+
+</body>
+</html>
